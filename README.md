@@ -120,7 +120,7 @@ streamlit run dashboard.py
 
 ## Dashboard Preview
 
-![Executive Dashboard](Streamlit_dashboard.png)
+![Executive Dashboard](Streamlit_dashboard_v2.png)
 
 The Streamlit dashboard provides:
 - **Executive KPI cards**: Capital deployed, expected profit, adjusted portfolio risk, approval rate
