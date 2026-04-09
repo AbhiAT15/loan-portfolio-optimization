@@ -1,0 +1,10 @@
+pandas
+sqlalchemy
+psycopg2-binary
+scikit-learn
+PuLP
+streamlit
+plotly
+tqdm
+numpy
+python-dotenv
