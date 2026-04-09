@@ -109,6 +109,7 @@ streamlit run dashboard.py
 ├── portfolio_optimizer.py     # PuLP Linear Programming solver
 ├── dashboard.py               # Streamlit executive dashboard
 ├── diagnostic.py              # Utility: inspect loan purpose distribution
+├── check_default_distribution.sql # Utility: check target class distribution
 ├── temp_feasibility_check.py  # Utility: MSME constraint feasibility analysis
 ├── requirements.txt           # Python dependencies
 ├── .env                       # Local DB credentials (not tracked in git)
