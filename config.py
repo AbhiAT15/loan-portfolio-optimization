@@ -6,7 +6,10 @@ from sqlalchemy import create_engine
 load_dotenv()
 
 # --- DATABASE CONFIGURATION ---
-DB_URL = os.getenv("DATABASE_URL", "postgresql://postgres:123456@localhost:5432/lendingclub")
+DB_URL = os.getenv("DATABASE_URL")
+
+if not DB_URL:
+    raise ValueError("CRITICAL: DATABASE_URL not found in environment!")
 
 def get_engine():
     """Returns the SQLAlchemy engine for database connections."""

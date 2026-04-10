@@ -15,7 +15,7 @@ df = pd.read_sql("""
     JOIN loan_predictions p ON f.loan_id = p.loan_id
     WHERE f.loan_amnt IS NOT NULL 
       AND p.prob_default IS NOT NULL
-    ORDER BY loan_id
+    ORDER BY MD5(f.loan_id::text)
     LIMIT 15000
 """, engine)
 

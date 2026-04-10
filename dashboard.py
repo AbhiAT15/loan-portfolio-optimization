@@ -56,7 +56,8 @@ col1, col2, col3, col4 = st.columns(4)
 col1.metric("Capital Deployed", f"₹{format_inr(capital_deployed)} / ₹{format_inr(CAPITAL_LIMIT)}")
 col2.metric("Expected Profit", f"₹{format_inr(expected_profit)}")
 col3.metric("Adjusted Portfolio Risk", f"{avg_pd * 100:.2f}%", "Ceiling: 10.00%", delta_color="inverse")
-col4.metric("Approval Rate", f"{(len(approved_df) / len(df)) * 100:.1f}%")
+approval_rate = (len(approved_df) / len(df) * 100) if len(df) > 0 else 0.0
+col4.metric("Approval Rate", f"{approval_rate:.1f}%")
 
 st.markdown("---")
 

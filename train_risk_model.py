@@ -1,6 +1,6 @@
 # Step 1: Connect to PostgreSQL
 import pandas as pd
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, StratifiedKFold, cross_val_predict
 from sklearn.preprocessing import StandardScaler
 from sklearn.impute import SimpleImputer # NEW: The Imputer to fix blank cells
 from sklearn.linear_model import LogisticRegression
@@ -47,11 +47,14 @@ y_pred_proba = model.predict_proba(X_test_scaled)[:, 1]
 auc_score = roc_auc_score(y_test, y_pred_proba)
 print(f"\n*** Model AUC-ROC Score: {auc_score:.4f} ***\n")
 
-print("5. Predicting probabilities for the entire portfolio...")
-# We must also impute and scale the full dataset before predicting the final probabilities
-X_full_imputed = imputer.transform(X)
-X_full_scaled = scaler.transform(X_full_imputed)
-df['prob_default'] = model.predict_proba(X_full_scaled)[:, 1]
+print("5. Generating Out-of-Fold (unbiased) probabilities for the entire portfolio...")
+# Re-impute/scale over the full dataset properly 
+X_full_imputed = imputer.fit_transform(X)
+X_full_scaled = scaler.fit_transform(X_full_imputed)
+
+# Create Out-of-Fold predictions so that we aren't optimizing on in-sample (biased) data
+cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+df['prob_default'] = cross_val_predict(model, X_full_scaled, y, cv=cv, method='predict_proba')[:, 1]
 
 # Create results table and push to PostgreSQL
 results_df = df[['loan_id', 'prob_default']]

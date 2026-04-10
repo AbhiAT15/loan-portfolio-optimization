@@ -43,7 +43,8 @@ This guarantee makes MSME loans significantly more attractive on a risk-adjusted
 | Phase | Script | Description |
 |---|---|---|
 | **1. Ingest** | `ingest_loan_data.py` | Chunked CSV → PostgreSQL ingestion (handles 1.1GB file) |
-| **2. Train** | `train_risk_model.py` | Logistic Regression with median imputation + standard scaling |
+| **2. Feature Build**| `build_features.py` | Engineers critical variables from raw tables `(installment * term) - loan_amnt` |
+| **3. Train** | `train_risk_model.py` | Logistic Regression yielding unbiased Out-Of-Fold (OOF) default probabilities |
 | **3. Optimize** | `portfolio_optimizer.py` | Binary LP: maximize risk-adjusted profit subject to constraints |
 | **4. Visualize** | `dashboard.py` | Executive Streamlit dashboard with KPIs + Plotly charts |
 
@@ -88,7 +89,10 @@ echo DATABASE_URL=postgresql://postgres:YOUR_PASSWORD@localhost:5432/lendingclub
 # Step 1: Ingest raw data into PostgreSQL
 python ingest_loan_data.py
 
-# Step 2: Train the risk model and generate PD predictions
+# Step 2: Build loan features logically
+python build_features.py
+
+# Step 3: Train the risk model and securely generate cross-validated OOF PD predictions
 python train_risk_model.py
 
 # Step 3: Run the portfolio optimizer
@@ -105,7 +109,8 @@ streamlit run dashboard.py
 ```
 ├── config.py                  # Centralized DB connection & business constants
 ├── ingest_loan_data.py        # CSV → PostgreSQL chunked ingestion
-├── train_risk_model.py        # Logistic Regression PD model
+├── build_features.py          # Data preparation and engineering 
+├── train_risk_model.py        # Logistic Regression PD model with OOF scoring
 ├── portfolio_optimizer.py     # PuLP Linear Programming solver
 ├── dashboard.py               # Streamlit executive dashboard
 ├── diagnostic.py              # Utility: inspect loan purpose distribution
